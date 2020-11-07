@@ -28,7 +28,10 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tapAction(_ sender: Any) {
-        stop()
+        //timer がnilか否か確認
+        if self.timer != nil {
+            stop()
+        }
         performSegue(withIdentifier: "subView",sender: nil)
     }
     
