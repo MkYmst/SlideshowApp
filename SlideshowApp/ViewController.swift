@@ -19,15 +19,28 @@ class ViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var playBtn: UIButton!
     @IBOutlet weak var goBtn: UIButton!
-    @IBOutlet weak var buckBtn: UIButton!
+    @IBOutlet weak var backbtn: UIButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
     
+    @IBAction func tapAction(_ sender: Any) {
+        performSegue(withIdentifier: "subView",sender: nil)
+        //print("print")
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if (segue.identifier == "subView") {
+            let subVC: SubViewController = (segue.destination as? SubViewController)!
+            // SubViewControllerのnumにcountを設定
+            subVC.num = count
+        }
+    }
+    
     // selector: #selector(updatetimer(_:)) で指定された関数
-    // timeInterval: 0.1, repeats: true で指定された通り、0.1秒毎に呼び出され続ける
     @objc func slideshow(_ timer: Timer) {
         if count == 5{
             count = 1
@@ -45,11 +58,16 @@ class ViewController: UIViewController {
             if self.timer == nil {
                 self.timer = Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(slideshow(_:)), userInfo: nil, repeats: true)
             }
+            goBtn.isEnabled = false
+            backbtn.isEnabled = false
+            
         }else{
             playBtn.setTitle("再生", for: .normal)
             play = "再生"
             self.timer.invalidate()   // タイマーを停止する
             self.timer = nil          // startTimer() の self.timer == nil で判断するために、 self.timer = nil としておく
+            goBtn.isEnabled = true
+            backbtn.isEnabled = true
         }
         
     }
@@ -71,6 +89,7 @@ class ViewController: UIViewController {
         imageView.image = UIImage(named: "\(count).png")
     }
     
-
+    @IBAction func unwind(_ segue: UIStoryboardSegue) {
+    }
 }
 
