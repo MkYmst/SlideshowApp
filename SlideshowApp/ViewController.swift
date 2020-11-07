@@ -28,8 +28,8 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tapAction(_ sender: Any) {
+        stop()
         performSegue(withIdentifier: "subView",sender: nil)
-        //print("print")
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -40,8 +40,16 @@ class ViewController: UIViewController {
         }
     }
     
-    // selector: #selector(updatetimer(_:)) で指定された関数
-    @objc func slideshow(_ timer: Timer) {
+    func stop(){
+        playBtn.setTitle("再生", for: .normal)
+        play = "再生"
+        self.timer.invalidate()   // タイマーを停止する
+        self.timer = nil          // startTimer() の self.timer == nil で判断するために、 self.timer = nil としておく
+        goBtn.isEnabled = true
+        backbtn.isEnabled = true
+    }
+    
+    func next(){
         if count == 5{
             count = 1
         }else{
@@ -50,7 +58,12 @@ class ViewController: UIViewController {
         imageView.image = UIImage(named: "\(count).png")
     }
     
+    // selector: #selector(updatetimer(_:)) で指定された関数
+    @objc func slideshow(_ timer: Timer) {
+        next()
+    }
     
+    //再生、停止ボタン
     @IBAction func play(_ sender: Any) {
         if play == "再生"{
             playBtn.setTitle("停止", for: .normal)
@@ -62,24 +75,17 @@ class ViewController: UIViewController {
             backbtn.isEnabled = false
             
         }else{
-            playBtn.setTitle("再生", for: .normal)
-            play = "再生"
-            self.timer.invalidate()   // タイマーを停止する
-            self.timer = nil          // startTimer() の self.timer == nil で判断するために、 self.timer = nil としておく
-            goBtn.isEnabled = true
-            backbtn.isEnabled = true
+            stop()
         }
         
     }
     
+    //進むボタン
     @IBAction func next(_ sender: Any) {
-        if count == 5{
-            count = 1
-        }else{
-            count += 1
-        }
-        imageView.image = UIImage(named: "\(count).png")
+        next()
     }
+    
+    //戻るボタン
     @IBAction func back(_ sender: Any) {
         if count == 1{
             count = 5
